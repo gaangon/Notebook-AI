@@ -2,13 +2,16 @@
 <view class="container">
   <!-- 头部 -->
   <view class="header">
-    <view class="title">📓 股票笔记本</view>
-    <view class="subtitle">每日推荐 · 胜率跟踪</view>
+    <view class="title-row">
+      <text class="title">📓 股票笔记本</text>
+      <text wx:if="{{useMock}}" class="mock-badge">模拟数据</text>
+    </view>
+    <text class="subtitle">每日推荐 · 胜率跟踪</text>
   </view>
 
   <!-- 加载中 -->
   <view wx:if="{{loading}}" class="loading-box">
-    <view class="loading-spinner"></view>
+    <view class="spinner"></view>
     <text class="loading-text">加载中...</text>
   </view>
 
@@ -33,28 +36,39 @@
       wx:key="日期"
       class="date-card"
     >
-      <!-- 日期头部（点击展开/折叠） -->
+      <!-- 日期头部 -->
       <view 
         class="date-header"
         bind:tap="toggleExpand"
         data-date="{{item.日期}}"
+        hover-class="header-hover"
       >
         <view class="date-left">
           <text class="date-text">{{item.日期}}</text>
           <text class="stock-count">{{item.股票.length}} 只股票</text>
         </view>
-        <text class="arrow {{expandedDate === item.日期 ? 'expanded' : ''}}">▶</text>
+        <view class="header-right">
+          <!-- 当日平均胜率 -->
+          <text class="avg-rate {{item._avgClass}}">
+            {{item._avgRate}}%
+          </text>
+          <text class="arrow {{expandedDate === item.日期 ? 'expanded' : ''}}">▶</text>
+        </view>
       </view>
 
-      <!-- 股票列表（展开时显示） -->
+      <!-- 股票列表 -->
       <view wx:if="{{expandedDate === item.日期}}" class="stock-list">
         <view 
           wx:for="{{item.股票}}" 
           wx:for-item="stock"
           wx:key="代码"
           class="stock-row"
+          hover-class="row-hover"
         >
-          <view class="stock-code">{{stock.代码}}</view>
+          <view class="stock-left">
+            <text class="stock-code">{{stock.代码}}</text>
+            <text class="stock-name" wx:if="{{stock.名称}}">{{stock.名称}}</text>
+          </view>
           <view class="win-rate {{stock._class}}">
             {{stock.胜率 * 100}}%
           </view>
@@ -63,8 +77,9 @@
     </view>
   </view>
 
-  <!-- 底部提示 -->
+  <!-- 底部 -->
   <view wx:if="{{stockData.length > 0}}" class="footer">
     <text class="footer-text">下拉刷新 · 共 {{stockData.length}} 天记录</text>
+    <text wx:if="{{useMock}}" class="footer-hint">当前为模拟数据，部署云函数后自动切换</text>
   </view>
 </view>

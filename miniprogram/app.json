@@ -1,15 +1,15 @@
 {
   "pages": [
+    "pages/index/index",
     "pages/login/login",
     "pages/note/note"
   ],
   "window": {
-    "navigationBarBackgroundColor": "#ffffff",
-    "navigationBarTextStyle": "black",
-    "navigationBarTitleText": "笔记本",
-    "backgroundColor": "#ffffff",
-    "backgroundTextStyle": "light",
-    "navigationStyle": "custom"
+    "navigationBarBackgroundColor": "#1aad19",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "股票笔记本",
+    "backgroundColor": "#f5f7fa",
+    "backgroundTextStyle": "dark"
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2",
