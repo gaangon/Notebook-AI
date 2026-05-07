@@ -27,9 +27,9 @@
   </view>
 
   <view wx:else class="history-list">
-    <view wx:for="{{history}}" wx:key="日期" class="history-row">
-      <text class="hist-date">{{item.日期}}</text>
-      <view class="win-rate {{item._class}}">{{item.胜率 * 100}}%</view>
+    <view wx:for="{{history}}" wx:key="idx" class="history-row">
+      <text class="hist-date">{{item.date}}</text>
+      <view class="win-rate {{item._class}}">{{item.rate}}%</view>
     </view>
   </view>
 </view>

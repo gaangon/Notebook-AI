@@ -3,7 +3,7 @@
   <!-- 头部 -->
   <view class="header">
     <view class="title-row">
-      <text class="title">📓 股票笔记本</text>
+      <text class="title">股票笔记本</text>
       <text wx:if="{{useMock}}" class="mock-badge">模拟数据</text>
     </view>
     <text class="subtitle">每日推荐 · 胜率跟踪</text>
@@ -17,65 +17,54 @@
 
   <!-- 错误提示 -->
   <view wx:elif="{{error}}" class="error-box">
-    <text class="error-icon">⚠️</text>
+    <text class="error-icon">!</text>
     <text class="error-text">{{error}}</text>
     <view class="retry-btn" bind:tap="fetchStockData">重试</view>
   </view>
 
   <!-- 空数据 -->
   <view wx:elif="{{stockData.length === 0}}" class="empty-box">
-    <text class="empty-icon">📭</text>
+    <text class="empty-icon">o</text>
     <text class="empty-text">暂无推荐数据</text>
     <text class="empty-hint">请先将 stocks.json 上传到云存储</text>
   </view>
 
   <!-- 数据列表 -->
   <view wx:else class="list">
-    <view 
-      wx:for="{{stockData}}" 
-      wx:key="日期"
-      class="date-card"
-    >
-      <!-- 日期头部 -->
-      <view 
-        class="date-header"
-        bind:tap="toggleExpand"
-        data-date="{{item.日期}}"
-        hover-class="header-hover"
-      >
-        <view class="date-left">
-          <text class="date-text">{{item.日期}}</text>
-          <text class="stock-count">{{item.股票.length}} 只股票</text>
-        </view>
-        <view class="header-right">
-          <!-- 当日平均胜率 -->
-          <text class="avg-rate {{item._avgClass}}">
-            {{item._avgRate}}%
-          </text>
-          <text class="arrow {{expandedDate === item.日期 ? 'expanded' : ''}}">▶</text>
-        </view>
-      </view>
-
-      <!-- 股票列表 -->
-      <view wx:if="{{expandedDate === item.日期}}" class="stock-list">
-        <view 
-          wx:for="{{item.股票}}" 
-          wx:for-item="stock"
-          wx:key="代码"
-          class="stock-row"
-          hover-class="row-hover"
+    <block wx:for="{{stockData}}" wx:key="idx">
+      <view class="date-card">
+        <!-- 日期头部 -->
+        <view
+          class="date-header"
+          bind:tap="toggleExpand"
+          data-idx="{{item.idx}}"
+          hover-class="header-hover"
         >
-          <view class="stock-left" bind:tap="goDetail" data-code="{{stock.代码}}" data-name="{{stock.名称 || ''}}" hover-class="cell-hover">
-            <text class="stock-code">{{stock.代码}}</text>
-            <text class="stock-name" wx:if="{{stock.名称}}">{{stock.名称}}</text>
-            <text class="tap-hint">详情 ›</text>
+          <view class="date-left">
+            <text class="date-text">{{item.date}}</text>
+            <text class="stock-count">{{item.count}} 只股票</text>
           </view>
-          <view class="win-rate {{stock._class}}">
-            {{stock.胜率 * 100}}%
+          <view class="header-right">
+            <text class="avg-rate {{item.avgClass}}">{{item.avgRate}}%</text>
+            <text class="arrow {{expandedIdx === item.idx ? 'expanded' : ''}}">></text>
           </view>
         </view>
+
+        <!-- 股票列表 -->
+        <view wx:if="{{expandedIdx === item.idx}}" class="stock-list">
+          <block wx:for="{{item.stocks}}" wx:for-item="s" wx:key="code">
+            <view class="stock-row" hover-class="row-hover">
+              <view class="stock-left" bind:tap="goDetail" data-code="{{s.code}}" data-name="{{s.name}}" hover-class="cell-hover">
+                <text class="stock-code">{{s.code}}</text>
+                <text class="stock-name" wx:if="{{s.name}}">{{s.name}}</text>
+                <text class="tap-hint">详情</text>
+              </view>
+              <view class="win-rate {{s.rateClass}}">{{s.rate * 100}}%</view>
+            </view>
+          </block>
+        </view>
       </view>
-    </view>
+    </block>
   </view>
 
   <!-- 底部 -->
