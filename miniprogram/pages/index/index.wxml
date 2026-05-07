@@ -65,9 +65,10 @@
           class="stock-row"
           hover-class="row-hover"
         >
-          <view class="stock-left">
+          <view class="stock-left" bind:tap="goDetail" data-code="{{stock.代码}}" data-name="{{stock.名称 || ''}}" hover-class="cell-hover">
             <text class="stock-code">{{stock.代码}}</text>
             <text class="stock-name" wx:if="{{stock.名称}}">{{stock.名称}}</text>
+            <text class="tap-hint">详情 ›</text>
           </view>
           <view class="win-rate {{stock._class}}">
             {{stock.胜率 * 100}}%

@@ -1,0 +1,35 @@
+<!--pages/stockDetail/stockDetail.wxml-->
+<view class="container">
+  <!-- 股票信息卡 -->
+  <view class="info-card">
+    <view class="stock-title">
+      <text class="stock-code">{{code}}</text>
+      <text wx:if="{{name}}" class="stock-name">{{name}}</text>
+    </view>
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-value">{{recommendCount}}</text>
+        <text class="stat-label">推荐次数</text>
+      </view>
+      <view class="stat-divider"></view>
+      <view class="stat-item">
+        <text class="stat-value {{avgClass}}">{{avgRate}}%</text>
+        <text class="stat-label">平均胜率</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 历史记录列表 -->
+  <view class="section-title">历史推荐记录</view>
+
+  <view wx:if="{{history.length === 0}}" class="empty">
+    <text class="empty-text">暂无该股票的历史记录</text>
+  </view>
+
+  <view wx:else class="history-list">
+    <view wx:for="{{history}}" wx:key="日期" class="history-row">
+      <text class="hist-date">{{item.日期}}</text>
+      <view class="win-rate {{item._class}}">{{item.胜率 * 100}}%</view>
+    </view>
+  </view>
+</view>

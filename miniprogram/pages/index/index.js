@@ -96,6 +96,14 @@ Page({
     });
   },
 
+  // 跳转到股票详情页
+  goDetail: function (e) {
+    const { code, name } = e.currentTarget.dataset;
+    wx.navigateTo({
+      url: `/pages/stockDetail/stockDetail?code=${code}&name=${name || ''}`
+    });
+  },
+
   getWinRateClass: function (rate) {
     if (rate >= 0.6) return 'high';
     if (rate >= 0.5) return 'medium';
