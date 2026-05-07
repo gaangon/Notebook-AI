@@ -1,0 +1,219 @@
+/* pages/index/index.wxss */
+
+.container {
+  min-height: 100vh;
+  background: #f5f7fa;
+  padding-bottom: 40rpx;
+}
+
+/* 头部 */
+.header {
+  background: linear-gradient(135deg, #1aad19, #12c45e);
+  padding: 60rpx 40rpx 50rpx;
+  color: #fff;
+}
+
+.title {
+  font-size: 44rpx;
+  font-weight: 700;
+  letter-spacing: 2rpx;
+}
+
+.subtitle {
+  font-size: 26rpx;
+  opacity: 0.85;
+  margin-top: 8rpx;
+}
+
+/* 加载中 */
+.loading-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 120rpx 0;
+}
+
+.loading-spinner {
+  width: 60rpx;
+  height: 60rpx;
+  border: 6rpx solid #e0e0e0;
+  border-top-color: #1aad19;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  margin-top: 24rpx;
+  font-size: 28rpx;
+  color: #999;
+}
+
+/* 错误提示 */
+.error-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 100rpx 60rpx;
+}
+
+.error-icon {
+  font-size: 80rpx;
+}
+
+.error-text {
+  margin-top: 24rpx;
+  font-size: 28rpx;
+  color: #e64340;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.retry-btn {
+  margin-top: 32rpx;
+  padding: 16rpx 60rpx;
+  background: #1aad19;
+  color: #fff;
+  border-radius: 8rpx;
+  font-size: 28rpx;
+}
+
+/* 空数据 */
+.empty-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120rpx 60rpx;
+}
+
+.empty-icon {
+  font-size: 100rpx;
+}
+
+.empty-text {
+  margin-top: 24rpx;
+  font-size: 32rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+.empty-hint {
+  margin-top: 16rpx;
+  font-size: 26rpx;
+  color: #999;
+}
+
+/* 日期卡片列表 */
+.list {
+  padding: 24rpx;
+}
+
+.date-card {
+  background: #fff;
+  border-radius: 16rpx;
+  margin-bottom: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+}
+
+.date-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28rpx 32rpx;
+}
+
+.date-header:active {
+  background: #f9f9f9;
+}
+
+.date-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.date-text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.stock-count {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 6rpx;
+}
+
+.arrow {
+  font-size: 24rpx;
+  color: #ccc;
+  transition: transform 0.3s ease;
+}
+
+.arrow.expanded {
+  transform: rotate(90deg);
+  color: #1aad19;
+}
+
+/* 股票列表 */
+.stock-list {
+  border-top: 1rpx solid #f0f0f0;
+  padding: 8rpx 32rpx 20rpx;
+}
+
+.stock-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #f8f8f8;
+}
+
+.stock-row:last-child {
+  border-bottom: none;
+}
+
+.stock-code {
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #333;
+  font-family: 'Menlo', 'Courier New', monospace;
+}
+
+/* 胜率标签 */
+.win-rate {
+  padding: 6rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+}
+
+.win-rate.high {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.win-rate.medium {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.win-rate.low {
+  background: #ffebee;
+  color: #c62828;
+}
+
+/* 底部 */
+.footer {
+  text-align: center;
+  padding: 40rpx 0 60rpx;
+}
+
+.footer-text {
+  font-size: 24rpx;
+  color: #bbb;
+}

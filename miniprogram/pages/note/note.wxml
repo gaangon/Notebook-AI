@@ -1,0 +1,25 @@
+<view class="container">
+  <!-- 自定义导航栏 -->
+  <view class="nav-bar">
+    <view class="nav-title">笔记本</view>
+    <view class="nav-refresh" bindtap="onRefresh">↻</view>
+  </view>
+  
+  <!-- 笔记输入区 -->
+  <textarea class="note-input" value="{{noteContent}}" bindinput="onInput" placeholder="" auto-focus />
+  
+  <!-- 股票数据展示区（刷新后显示） -->
+  <view class="stock-section" wx:if="{{showStock}}">
+    <view class="divider"></view>
+    <view class="stock-date">{{stockDate}}</view>
+    <view class="stock-list">
+      <view class="stock-item" wx:for="{{stockList}}" wx:key="代码">
+        <text class="stock-code">{{item.代码}}</text>
+        <view class="stock-bar-bg">
+          <view class="stock-bar-fill" style="width: {{item.胜率 * 100}}%; background: {{item.胜率 >= 0.5 ? '#52C41A' : '#FF4D4F'}}"></view>
+        </view>
+        <text class="stock-rate">{{item.胜率}}</text>
+      </view>
+    </view>
+  </view>
+</view>

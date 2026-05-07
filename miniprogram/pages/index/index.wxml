@@ -1,0 +1,70 @@
+<!--pages/index/index.wxml-->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="title">📓 股票笔记本</view>
+    <view class="subtitle">每日推荐 · 胜率跟踪</view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-box">
+    <view class="loading-spinner"></view>
+    <text class="loading-text">加载中...</text>
+  </view>
+
+  <!-- 错误提示 -->
+  <view wx:elif="{{error}}" class="error-box">
+    <text class="error-icon">⚠️</text>
+    <text class="error-text">{{error}}</text>
+    <view class="retry-btn" bind:tap="fetchStockData">重试</view>
+  </view>
+
+  <!-- 空数据 -->
+  <view wx:elif="{{stockData.length === 0}}" class="empty-box">
+    <text class="empty-icon">📭</text>
+    <text class="empty-text">暂无推荐数据</text>
+    <text class="empty-hint">请先将 stocks.json 上传到云存储</text>
+  </view>
+
+  <!-- 数据列表 -->
+  <view wx:else class="list">
+    <view 
+      wx:for="{{stockData}}" 
+      wx:key="日期"
+      class="date-card"
+    >
+      <!-- 日期头部（点击展开/折叠） -->
+      <view 
+        class="date-header"
+        bind:tap="toggleExpand"
+        data-date="{{item.日期}}"
+      >
+        <view class="date-left">
+          <text class="date-text">{{item.日期}}</text>
+          <text class="stock-count">{{item.股票.length}} 只股票</text>
+        </view>
+        <text class="arrow {{expandedDate === item.日期 ? 'expanded' : ''}}">▶</text>
+      </view>
+
+      <!-- 股票列表（展开时显示） -->
+      <view wx:if="{{expandedDate === item.日期}}" class="stock-list">
+        <view 
+          wx:for="{{item.股票}}" 
+          wx:for-item="stock"
+          wx:key="代码"
+          class="stock-row"
+        >
+          <view class="stock-code">{{stock.代码}}</view>
+          <view class="win-rate {{stock._class}}">
+            {{stock.胜率 * 100}}%
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部提示 -->
+  <view wx:if="{{stockData.length > 0}}" class="footer">
+    <text class="footer-text">下拉刷新 · 共 {{stockData.length}} 天记录</text>
+  </view>
+</view>

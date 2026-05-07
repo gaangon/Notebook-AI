@@ -1,0 +1,22 @@
+# 微信小程序
+miniprogram/node_modules/
+miniprogram/pages/chatBot/
+miniprogram/pages/index/index.wxml.bak
+miniprogram/pages/index/index.js.bak
+miniprogram/pages/index/index.wxss.bak
+
+# 云函数依赖
+cloudfunctions/**/node_modules/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# 临时文件
+*.tmp
+*.temp
