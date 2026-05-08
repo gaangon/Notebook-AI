@@ -2,8 +2,7 @@
   "pages": [
     "pages/index/index",
     "pages/noteDetail/noteDetail",
-    "pages/createNote/createNote",
-    "pages/login/login"
+    "pages/createNote/createNote"
   ],
   "window": {
     "navigationBarBackgroundColor": "#1aad19",

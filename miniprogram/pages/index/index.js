@@ -1,85 +1,127 @@
 // pages/index/index.js
+const STORAGE_KEY = 'local_notes';
+const MAX_LOCAL = 10;
+
 Page({
   data: {
-    noteList: [],   // 合并后的笔记列表（云端 + 本地）
-    loading: true
+    noteList: [],
+    loading: false,
+    useMock: false
   },
 
-  onLoad: function () {
-    this.loadLocalNotes();   // 先加载本地
-    this.fetchNoteData();   // 再拉取云端
+  onLoad() {
+    this.loadLocalNotes();
+    this.fetchNoteData();
   },
 
-  onShow: function () {
-    // 从新建页面返回时刷新本地笔记
+  onShow() {
     this.loadLocalNotes();
     this.mergeNotes();
   },
 
-  // ========== 云端数据 ==========
-  fetchNoteData: function () {
-    this.setData({ loading: true });
-    wx.cloud.callFunction({
-      name: 'getNotesData',
-      success: res => {
-        const result = res.result || {};
-        if (result.success && result.data) {
-          const cloudNotes = result.data.map(item => ({
-            ...item,
-            _local: false,
-            _id: 'c_' + (item.标题 || '') + '_' + (item.创建日期 || '')
-          }));
-          this.setData({ _cloudNotes: cloudNotes, loading: false });
-          this.mergeNotes();
-        } else {
-          this.setData({ loading: false });
-          this.mergeNotes();
-        }
-      },
-      fail: () => {
-        this.setData({ loading: false });
-        this.mergeNotes();
+  // 从本地存储加载用户自建笔记
+  loadLocalNotes() {
+    const local = wx.getStorageSync(STORAGE_KEY) || [];
+    const tagged = local.map(item => ({
+      ...item,
+      _local: true,
+      id: item.id || 'local_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5)
+    }));
+    this._localNotes = tagged;
+  },
+
+  // 合并云端 + 本地，按创建日期倒序
+  mergeNotes() {
+    const cloud = this._cloudNotes || [];
+    const local = this._localNotes || [];
+    const all = [...cloud, ...local];
+
+    all.sort((a, b) => {
+      const da = a.createDate || '';
+      const db = b.createDate || '';
+      return db.localeCompare(da, 'zh-CN');
+    });
+
+    this.setData({ noteList: all });
+  },
+
+  // 从云函数获取笔记数据
+  fetchNoteData() {
+    this.setData({ loading: true, useMock: false });
+
+    return new Promise((resolve) => {
+      if (typeof wx.cloud === 'undefined') {
+        this.useFallbackData(resolve);
+        return;
       }
+
+      wx.cloud.callFunction({
+        name: 'getNotesData',
+        success: res => {
+          const result = res.result || {};
+          if (result.success && result.data) {
+            console.log('✅ 数据来源：云端');
+            const cloudNotes = result.data.map((item, idx) => ({
+              ...item,
+              _local: false,
+              id: 'cloud_' + idx + '_' + (item.title || '')
+            }));
+            this._cloudNotes = cloudNotes;
+            this.mergeNotes();
+            this.setData({ loading: false, useMock: false });
+          } else {
+            console.warn('⚠️ 云函数返回失败', result.error || '');
+            this.useFallbackData(resolve);
+          }
+          resolve();
+        },
+        fail: (err) => {
+          console.warn('❌ 云函数不可用', err);
+          this.useFallbackData(resolve);
+        }
+      });
     });
   },
 
-  // ========== 本地笔记 ==========
-  loadLocalNotes: function () {
-    const local = wx.getStorageSync('localNotes') || [];
-    this.setData({ _localNotes: local });
-  },
-
-  // ========== 合并排序 ==========
-  mergeNotes: function () {
-    const cloud = this.data._cloudNotes || [];
-    const local = this.data._localNotes || [];
-    const merged = [].concat(cloud).concat(local);
-
-    // 按创建日期倒序
-    merged.sort((a, b) => {
-      const da = new Date(a.创建日期 || 0);
-      const db = new Date(b.创建日期 || 0);
-      return db - da;
-    });
-
-    this.setData({ noteList: merged });
-  },
-
-  // ========== 跳转 ==========
-  goDetail: function (e) {
-    const idx = e.currentTarget.dataset.index;
-    const note = this.data.noteList[idx];
-    wx.navigateTo({
-      url: '/pages/noteDetail/noteDetail?data=' + encodeURIComponent(JSON.stringify(note))
-    });
-  },
-
-  goCreate: function () {
-    const local = wx.getStorageSync('localNotes') || [];
-    if (local.length >= 10) {
-      wx.showToast({ title: '最多只能创建10条本地笔记', icon: 'none' });
-      return;
+  // 兜底：使用本地 notes.json
+  useFallbackData(resolve) {
+    try {
+      const notes = require('../../notes.json');
+      const cloudNotes = (notes || []).map((item, idx) => ({
+        ...item,
+        _local: false,
+        id: 'cloud_' + idx + '_' + (item.title || '')
+      }));
+      this._cloudNotes = cloudNotes;
+      this.mergeNotes();
+      this.setData({ loading: false, useMock: true });
+    } catch (e) {
+      this._cloudNotes = [];
+      this.mergeNotes();
+      this.setData({ loading: false, useMock: true });
     }
+    if (resolve) resolve();
+  },
+
+  // 跳转到新建笔记页面
+  goCreate() {
     wx.navigateTo({ url: '/pages/createNote/createNote' });
+  },
+
+  // 跳转到详情页
+  goDetail(e) {
+    const index = e.currentTarget.dataset.index;
+    const note = this.data.noteList[index];
+    if (!note) return;
+
+    wx.setStorageSync('__current_note', note);
+    wx.navigateTo({ url: '/pages/noteDetail/noteDetail' });
+  },
+
+  // 下拉刷新
+  onPullDownRefresh() {
+    this.fetchNoteData().then(() => {
+      wx.stopPullDownRefresh();
+    });
   }
 });

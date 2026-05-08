@@ -1,18 +1,13 @@
 <!--pages/noteDetail/noteDetail.wxml-->
 <view class="container">
 
-  <!-- 标题卡 -->
-  <view class="title-card">
-    <text class="note-title">{{title}}</text>
-    <view class="date-row">
-      <text class="note-date">{{创建日期}}</text>
-      <text wx:if="{{_local}}" class="local-badge">本地笔记</text>
-    </view>
+  <view class="detail-header">
+    <text class="detail-title">{{title}}</text>
+    <text wx:if="{{createDate}}" class="detail-date">{{createDate}}</text>
   </view>
 
-  <!-- 内容（Markdown 渲染为 HTML） -->
-  <view class="content-card">
-    <rich-text nodes="{{richContent}}" />
+  <view class="detail-body">
+    <rich-text nodes="{{contentHtml}}"></rich-text>
   </view>
 
 </view>

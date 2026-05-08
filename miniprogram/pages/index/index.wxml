@@ -40,10 +40,10 @@
       hover-class="card-hover"
     >
       <view class="note-title-row">
-        <text class="note-badge" wx:if="{{item._local}}">本地</text>
-        <text class="note-title">{{item.标题}}</text>
+        <text wx:if="{{item._local}}" class="note-badge">本地</text>
+        <text class="note-title">{{item.title}}</text>
       </view>
-      <text class="note-date">{{item.创建日期}}</text>
+      <text class="note-date">{{item.createDate}}</text>
     </view>
   </view>
 
