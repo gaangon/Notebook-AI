@@ -1,9 +1,9 @@
 Page({
   data: {
     noteContent: '',
-    showStock: false,
-    stockDate: '',
-    stockList: []
+    showNotes: false,
+    noteDate: '',
+    itemList: []
   },
 
   onLoad: function() {
@@ -22,9 +22,8 @@ Page({
   onRefresh: function() {
     wx.showLoading({ title: '加载中...' });
 
-    // 调用云函数获取 stocks.json
     wx.cloud.callFunction({
-      name: 'getStocksData',
+      name: 'getNotesData',
       success: res => {
         wx.hideLoading();
         if (!res.result || !res.result.success) {
@@ -46,20 +45,21 @@ Page({
         });
 
         const latest = rawData[0];
-        const rawStocks = latest['股票'] || [];
+        const rawItems = latest['条目'] || [];
 
-        // 预处理：在 JS 中计算样式值（WXML 不支持运算和三元表达式）
-        const stockList = rawStocks.map(item => ({
-          code: item['代码'] || '',
-          rate: (item['胜率'] * 100).toFixed(0) + '%',
-          _barWidth: (item['胜率'] * 100) + '%',
-          _barColor: item['胜率'] >= 0.6 ? '#52C41A' : (item['胜率'] >= 0.5 ? '#FA8C16' : '#FF4D4F')
+        // 预处理：在 JS 中计算样式（WXML 不支持运算和三元）
+        const itemList = rawItems.map(item => ({
+          title: item['标题'] || '',
+          desc: item['描述'] || '',
+          score: (item['评分'] * 100).toFixed(0) + '分',
+          _barWidth: (item['评分'] * 100) + '%',
+          _barColor: item['评分'] >= 0.8 ? '#52C41A' : (item['评分'] >= 0.6 ? '#FA8C16' : '#FF4D4F')
         }));
 
         this.setData({
-          showStock: true,
-          stockDate: latest['日期'] || '',
-          stockList
+          showNotes: true,
+          noteDate: latest['日期'] || '',
+          itemList
         });
       },
       fail: err => {
@@ -70,7 +70,6 @@ Page({
     });
   },
 
-  // 辅助：解析中文日期为时间戳
   _parseDate: function(dateStr) {
     const cleaned = dateStr.replace('年', '-').replace('月', '-').replace('日', '');
     return new Date(cleaned).getTime() || 0;

@@ -1,296 +1,156 @@
 /* pages/index/index.wxss */
-
-.container {
-  min-height: 100vh;
-  background: #f5f7fa;
-  padding-bottom: 60rpx;
-}
+.container { min-height: 100vh; background: #f5f7fa; padding-bottom: 60rpx; }
 
 /* ===== 头部 ===== */
 .header {
   background: linear-gradient(135deg, #1aad19, #12c45e);
-  padding: 48rpx 40rpx 44rpx;
+  padding: 60rpx 36rpx 44rpx;
   color: #fff;
 }
-
-.title-row {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-.title {
-  font-size: 42rpx;
-  font-weight: 700;
-  letter-spacing: 2rpx;
-}
-
+.title-row { display: flex; align-items: center; gap: 16rpx; }
+.title { font-size: 40rpx; font-weight: 700; }
 .mock-badge {
-  font-size: 20rpx;
+  font-size: 22rpx;
   background: rgba(255,255,255,0.25);
   padding: 4rpx 16rpx;
   border-radius: 20rpx;
 }
+.subtitle { display: block; font-size: 26rpx; opacity: 0.8; margin-top: 8rpx; }
 
-.subtitle {
-  font-size: 26rpx;
-  opacity: 0.85;
-  margin-top: 8rpx;
-}
-
-/* ===== 加载中 ===== */
-.loading-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 120rpx 0;
-}
-
+/* ===== 加载 ===== */
+.loading-box { display: flex; flex-direction: column; align-items: center; padding: 120rpx 0; }
 .spinner {
-  width: 56rpx;
-  height: 56rpx;
-  border: 6rpx solid #e0e0e0;
+  width: 56rpx; height: 56rpx;
+  border: 4rpx solid #e0e0e0;
   border-top-color: #1aad19;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-text { margin-top: 20rpx; font-size: 28rpx; color: #999; }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.loading-text {
-  margin-top: 24rpx;
-  font-size: 28rpx;
-  color: #999;
-}
-
-/* ===== 错误提示 ===== */
-.error-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 100rpx 60rpx;
-}
-
+/* ===== 错误 ===== */
+.error-box { display: flex; flex-direction: column; align-items: center; padding: 120rpx 0; }
 .error-icon {
-  font-size: 80rpx;
+  width: 72rpx; height: 72rpx;
+  border-radius: 50%;
+  background: #ff4d4f;
+  color: #fff; font-size: 40rpx; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20rpx;
 }
-
-.error-text {
-  margin-top: 24rpx;
-  font-size: 28rpx;
-  color: #e64340;
-  text-align: center;
-  line-height: 1.6;
-}
-
+.error-text { font-size: 28rpx; color: #666; margin-bottom: 24rpx; }
 .retry-btn {
-  margin-top: 32rpx;
-  padding: 14rpx 56rpx;
+  padding: 14rpx 48rpx;
   background: #1aad19;
   color: #fff;
-  border-radius: 8rpx;
+  border-radius: 40rpx;
   font-size: 28rpx;
 }
 
-/* ===== 空数据 ===== */
-.empty-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 120rpx 60rpx;
-}
-
+/* ===== 空状态 ===== */
+.empty-box { display: flex; flex-direction: column; align-items: center; padding: 120rpx 0; }
 .empty-icon {
-  font-size: 100rpx;
+  width: 80rpx; height: 80rpx;
+  border-radius: 50%;
+  background: #e8f5e9;
+  color: #1aad19;
+  font-size: 48rpx;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20rpx;
 }
+.empty-text { font-size: 30rpx; color: #333; }
+.empty-hint { font-size: 24rpx; color: #999; margin-top: 10rpx; }
 
-.empty-text {
-  margin-top: 24rpx;
-  font-size: 32rpx;
-  color: #666;
-  font-weight: 500;
-}
-
-.empty-hint {
-  margin-top: 16rpx;
-  font-size: 26rpx;
-  color: #999;
-}
-
-/* ===== 日期卡片列表 ===== */
-.list {
-  padding: 24rpx;
-}
-
+/* ===== 日期卡片 ===== */
+.list { padding: 24rpx; }
 .date-card {
   background: #fff;
   border-radius: 16rpx;
   margin-bottom: 20rpx;
   overflow: hidden;
-  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.05);
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
 }
 
+/* 日期头部 */
 .date-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 28rpx 32rpx;
 }
+.header-hover { background: #f9f9f9; }
+.date-left { display: flex; flex-direction: column; }
+.date-text { font-size: 30rpx; font-weight: 600; color: #333; }
+.item-count { font-size: 24rpx; color: #999; margin-top: 4rpx; }
 
-.header-hover {
-  background: #f9f9f9;
-}
-
-.date-left {
-  display: flex;
-  flex-direction: column;
-  gap: 6rpx;
-}
-
-.date-text {
-  font-size: 32rpx;
-  font-weight: 600;
-  color: #222;
-}
-
-.stock-count {
-  font-size: 24rpx;
-  color: #999;
-}
-
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 16rpx;
-}
-
-/* 平均胜率标签 */
-.avg-rate {
-  font-size: 24rpx;
-  font-weight: 600;
+.header-right { display: flex; align-items: center; gap: 12rpx; }
+.avg-score {
   padding: 4rpx 16rpx;
-  border-radius: 16rpx;
-}
-
-.avg-rate.high {
-  background: #e8f5e9;
-  color: #2e7d32;
-}
-
-.avg-rate.medium {
-  background: #fff3e0;
-  color: #e65100;
-}
-
-.avg-rate.low {
-  background: #ffebee;
-  color: #c62828;
-}
-
-.arrow {
-  font-size: 24rpx;
-  color: #ccc;
-  transition: transform 0.3s ease;
-}
-
-.arrow.expanded {
-  transform: rotate(90deg);
-  color: #1aad19;
-}
-
-/* ===== 股票列表 ===== */
-.stock-list {
-  border-top: 1rpx solid #f0f0f0;
-  padding: 4rpx 32rpx 16rpx;
-}
-
-.stock-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20rpx 0;
-  border-bottom: 1rpx solid #f8f8f8;
-}
-
-.stock-row:last-child {
-  border-bottom: none;
-}
-
-.row-hover {
-  background: #fafafa;
-}
-
-.stock-left {
-  display: flex;
-  align-items: baseline;
-  gap: 12rpx;
-}
-
-.stock-code {
-  font-size: 30rpx;
-  font-weight: 500;
-  color: #333;
-  font-family: 'Menlo', 'Courier New', monospace;
-}
-
-.stock-name {
-  font-size: 24rpx;
-  color: #999;
-}
-
-/* 胜率标签 */
-.win-rate {
-  padding: 6rpx 20rpx;
   border-radius: 20rpx;
   font-size: 26rpx;
   font-weight: 600;
 }
+.avg-score.high  { background: #e8f5e9; color: #2e7d32; }
+.avg-score.medium { background: #fff3e0; color: #e65100; }
+.avg-score.low  { background: #ffebee; color: #c62828; }
 
-.win-rate.high {
-  background: #e8f5e9;
-  color: #2e7d32;
+.arrow {
+  font-size: 28rpx; color: #ccc;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+.arrow.expanded { transform: rotate(90deg); }
+
+/* ===== 条目列表 ===== */
+.item-list { border-top: 1rpx solid #f0f0f0; padding: 16rpx 0; }
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18rpx 32rpx;
+}
+.item-row:last-child { padding-bottom: 24rpx; }
+.row-hover { background: #f5f5f5; }
+
+.item-left {
+  flex: 1; min-width: 0;
+  display: flex; flex-direction: column;
+}
+.item-title {
+  font-size: 28rpx; color: #333;
+  font-weight: 500;
+}
+.item-desc {
+  font-size: 24rpx; color: #999;
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.win-rate.medium {
-  background: #fff3e0;
-  color: #e65100;
+/* 评分标签 */
+.score-badge {
+  padding: 6rpx 20rpx;
+  border-radius: 20rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-left: 16rpx;
 }
-
-.win-rate.low {
-  background: #ffebee;
-  color: #c62828;
-}
+.score-badge.high  { background: #e8f5e9; color: #2e7d32; }
+.score-badge.medium { background: #fff3e0; color: #e65100; }
+.score-badge.low  { background: #ffebee; color: #c62828; }
 
 /* ===== 底部 ===== */
-.footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40rpx 0 60rpx;
-  gap: 8rpx;
-}
+.footer { text-align: center; padding: 20rpx 0 40rpx; }
+.footer-text { font-size: 24rpx; color: #bbb; }
+.footer-hint { font-size: 22rpx; color: #1aad19; opacity: 0.7; display: block; margin-top: 8rpx; }
 
-.footer-text {
-  font-size: 24rpx;
-  color: #bbb;
-}
-
-.footer-hint {
-  font-size: 22rpx;
-  color: #1aad19;
-  opacity: 0.7;
-}
-
-/* 股票行点击效果 */
-.cell-hover {
-  opacity: 0.6;
-}
-
+/* 条目行点击效果 */
+.cell-hover { opacity: 0.6; }
 .tap-hint {
   font-size: 22rpx;
   color: #1aad19;
-  margin-left: auto;
-  white-space: nowrap;
+  margin-top: 4rpx;
 }

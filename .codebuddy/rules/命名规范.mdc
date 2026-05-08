@@ -1,0 +1,9 @@
+---
+description: 
+alwaysApply: true
+enabled: true
+updatedAt: 2026-05-08T01:03:36.021Z
+provider: 
+---
+
+整个项目不能出现金融，股票，证券相关的词汇。每次该代码的时候，变量，函数，注释等，都要避免金融，股票相关的词汇

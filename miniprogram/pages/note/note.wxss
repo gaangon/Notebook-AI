@@ -40,7 +40,7 @@
   margin: 20px;
 }
 
-.stock-date {
+.note-date {
   font-size: 14px;
   color: #999999;
   text-align: right;
@@ -48,39 +48,64 @@
   margin-bottom: 10px;
 }
 
-.stock-list {
+.item-list {
   padding: 0 20px;
 }
 
-.stock-item {
+.item-row {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
-.stock-code {
-  width: 80px;
+.item-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.item-title {
   font-size: 14px;
   color: #000000;
+  font-weight: 500;
 }
 
-.stock-bar-bg {
+.item-desc {
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.score-bar-box {
+  display: flex;
+  align-items: center;
+  width: 200rpx;
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+.score-bar-bg {
   flex: 1;
   height: 10px;
   background: #EEEEEE;
   border-radius: 5px;
   overflow: hidden;
-  margin: 0 10px;
+  margin-right: 10px;
 }
 
-.stock-bar-fill {
+.score-bar-fill {
   height: 100%;
   border-radius: 5px;
+  transition: width 0.3s ease;
 }
 
-.stock-rate {
-  width: 50px;
+.score-text {
   font-size: 12px;
   color: #999999;
+  width: 50px;
   text-align: right;
 }

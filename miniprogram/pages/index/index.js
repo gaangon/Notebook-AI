@@ -1,36 +1,36 @@
 // pages/index/index.js
 Page({
   data: {
-    stockData: [],
+    noteData: [],
     loading: true,
     error: null,
-    expandedIdx: -1,  // -1 表示全部折叠
+    expandedIdx: -1,
     useMock: false
   },
 
   onLoad: function () {
-    this.fetchStockData();
+    this.fetchNoteData();
   },
 
   onPullDownRefresh: function () {
-    this.fetchStockData().then(() => wx.stopPullDownRefresh());
+    this.fetchNoteData().then(() => wx.stopPullDownRefresh());
   },
 
-  fetchStockData: function () {
+  fetchNoteData: function () {
     this.setData({ loading: true, error: null });
     return new Promise((resolve) => {
       wx.cloud.callFunction({
-        name: 'getStocksData',
+        name: 'getNotesData',
         success: res => {
           const result = res.result || {};
           if (result.success && result.data) {
             this.setData({
-              stockData: this.transformData(result.data),
+              noteData: this.transformData(result.data),
               loading: false,
               useMock: false
             });
           } else {
-            this.setData({ loading: false, useMock: true });
+            this.setData({ loading: false, useMock: true, error: result.error || null });
           }
           resolve();
         },
@@ -45,20 +45,20 @@ Page({
   // 将 raw JSON 转为页面需要的格式
   transformData: function (raw) {
     return raw.map((day, i) => {
-      const stocks = (day.股票 || []).map(s => ({
-        code: s.代码 || '',
-        name: s.名称 || '',
-        rate: s.胜率 || 0,
-        rateClass: this.rateClass(s.胜率 || 0)
+      const items = (day['条目'] || []).map(s => ({
+        title: s['标题'] || '',
+        desc: s['描述'] || '',
+        score: s['评分'] || 0,
+        scoreClass: this.scoreClass(s['评分'] || 0)
       }));
-      const avg = stocks.reduce((sum, s) => sum + s.rate, 0) / Math.max(stocks.length, 1);
+      const avg = items.reduce((sum, s) => sum + s.score, 0) / Math.max(items.length, 1);
       return {
         idx: i,
-        date: day.日期 || '',
-        count: stocks.length,
-        avgRate: (avg * 100).toFixed(1),
-        avgClass: this.rateClass(avg),
-        stocks: stocks
+        date: day['日期'] || '',
+        count: items.length,
+        avgScore: (avg * 100).toFixed(1),
+        avgScoreClass: this.scoreClass(avg),
+        items: items
       };
     });
   },
@@ -70,16 +70,16 @@ Page({
     });
   },
 
-  goDetail: function (e) {
-    const { code, name } = e.currentTarget.dataset;
+  goNoteDetail: function (e) {
+    const { title, desc } = e.currentTarget.dataset;
     wx.navigateTo({
-      url: '/pages/stockDetail/stockDetail?code=' + code + '&name=' + (name || '')
+      url: '/pages/noteDetail/noteDetail?title=' + encodeURIComponent(title || '') + '&desc=' + encodeURIComponent(desc || '')
     });
   },
 
-  rateClass: function (rate) {
-    if (rate >= 0.6) return 'high';
-    if (rate >= 0.5) return 'medium';
+  scoreClass: function (score) {
+    if (score >= 0.8) return 'high';
+    if (score >= 0.6) return 'medium';
     return 'low';
   }
 });

@@ -8,17 +8,22 @@
   <!-- 笔记输入区 -->
   <textarea class="note-input" value="{{noteContent}}" bindinput="onInput" placeholder="输入笔记..." auto-focus />
   
-  <!-- 股票数据展示区（刷新后显示） -->
-  <view class="stock-section" wx:if="{{showStock}}">
+  <!-- 笔记数据展示区（刷新后显示） -->
+  <view class="note-section" wx:if="{{showNotes}}">
     <view class="divider"></view>
-    <view class="stock-date">{{stockDate}}</view>
-    <view class="stock-list">
-      <view class="stock-item" wx:for="{{stockList}}" wx:key="*this">
-        <text class="stock-code">{{item.code}}</text>
-        <view class="stock-bar-bg">
-          <view class="stock-bar-fill" style="width: {{item._barWidth}}; background: {{item._barColor}}"></view>
+    <view class="note-date">{{noteDate}}</view>
+    <view class="item-list">
+      <view class="item-row" wx:for="{{itemList}}" wx:key="*this">
+        <view class="item-info">
+          <text class="item-title">{{item.title}}</text>
+          <text class="item-desc" wx:if="{{item.desc}}">{{item.desc}}</text>
         </view>
-        <text class="stock-rate">{{item.rate}}</text>
+        <view class="score-bar-box">
+          <view class="score-bar-bg">
+            <view class="score-bar-fill" style="width: {{item._barWidth}}; background: {{item._barColor}}"></view>
+          </view>
+          <text class="score-text">{{item.score}}</text>
+        </view>
       </view>
     </view>
   </view>

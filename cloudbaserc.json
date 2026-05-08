@@ -2,14 +2,14 @@
   "envId": "wx-d8gxg26kyb6352e1a",
   "functions": [
     {
-      "name": "getStocksData",
+      "name": "getNotesData",
       "timeout": 15,
       "envVariables": {},
       "runtime": "Nodejs18.15",
       "memorySize": 256,
       "installDependency": true,
       "handler": "index.main",
-      "path": "cloudfunctions/getStocksData"
+      "path": "cloudfunctions/getNotesData"
     }
   ]
 }

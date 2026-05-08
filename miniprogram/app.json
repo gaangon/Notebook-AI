@@ -1,14 +1,14 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/stockDetail/stockDetail",
+    "pages/noteDetail/noteDetail",
     "pages/login/login",
     "pages/note/note"
   ],
   "window": {
     "navigationBarBackgroundColor": "#1aad19",
     "navigationBarTextStyle": "white",
-    "navigationBarTitleText": "股票笔记本",
+    "navigationBarTitleText": "我的笔记本",
     "backgroundColor": "#f5f7fa",
     "backgroundTextStyle": "dark"
   },

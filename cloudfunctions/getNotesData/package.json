@@ -1,7 +1,7 @@
 {
-  "name": "getStocksData",
+  "name": "getNotesData",
   "version": "1.0.0",
-  "description": "从云存储读取 stocks.json 并返回数据",
+  "description": "从云存储读取 notes.json 并返回笔记数据",
   "main": "index.js",
   "dependencies": {
     "wx-server-sdk": "~2.6.3"

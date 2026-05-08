@@ -3,10 +3,10 @@
   <!-- 头部 -->
   <view class="header">
     <view class="title-row">
-      <text class="title">股票笔记本</text>
-      <text wx:if="{{useMock}}" class="mock-badge">模拟数据</text>
+      <text class="title">我的笔记本</text>
+      <text wx:if="{{useMock}}" class="mock-badge">本地数据</text>
     </view>
-    <text class="subtitle">每日推荐 · 胜率跟踪</text>
+    <text class="subtitle">每日笔记 · 评分回顾</text>
   </view>
 
   <!-- 加载中 -->
@@ -19,19 +19,19 @@
   <view wx:elif="{{error}}" class="error-box">
     <text class="error-icon">!</text>
     <text class="error-text">{{error}}</text>
-    <view class="retry-btn" bind:tap="fetchStockData">重试</view>
+    <view class="retry-btn" bind:tap="fetchNoteData">重试</view>
   </view>
 
   <!-- 空数据 -->
-  <view wx:elif="{{stockData.length === 0}}" class="empty-box">
+  <view wx:elif="{{noteData.length === 0}}" class="empty-box">
     <text class="empty-icon">o</text>
-    <text class="empty-text">暂无推荐数据</text>
-    <text class="empty-hint">请先将 stocks.json 上传到云存储</text>
+    <text class="empty-text">暂无笔记数据</text>
+    <text class="empty-hint">请先将 notes.json 上传到云存储</text>
   </view>
 
   <!-- 数据列表 -->
   <view wx:else class="list">
-    <block wx:for="{{stockData}}" wx:key="idx">
+    <block wx:for="{{noteData}}" wx:key="idx">
       <view class="date-card">
         <!-- 日期头部 -->
         <view
@@ -42,24 +42,24 @@
         >
           <view class="date-left">
             <text class="date-text">{{item.date}}</text>
-            <text class="stock-count">{{item.count}} 只股票</text>
+            <text class="item-count">{{item.count}} 条笔记</text>
           </view>
           <view class="header-right">
-            <text class="avg-rate {{item.avgClass}}">{{item.avgRate}}%</text>
+            <text class="avg-score {{item.avgScoreClass}}">{{item.avgScore}}分</text>
             <text class="arrow {{expandedIdx === item.idx ? 'expanded' : ''}}">></text>
           </view>
         </view>
 
-        <!-- 股票列表 -->
-        <view wx:if="{{expandedIdx === item.idx}}" class="stock-list">
-          <block wx:for="{{item.stocks}}" wx:for-item="s" wx:key="code">
-            <view class="stock-row" hover-class="row-hover">
-              <view class="stock-left" bind:tap="goDetail" data-code="{{s.code}}" data-name="{{s.name}}" hover-class="cell-hover">
-                <text class="stock-code">{{s.code}}</text>
-                <text class="stock-name" wx:if="{{s.name}}">{{s.name}}</text>
-                <text class="tap-hint">详情</text>
+        <!-- 条目列表 -->
+        <view wx:if="{{expandedIdx === item.idx}}" class="item-list">
+          <block wx:for="{{item.items}}" wx:for-item="s" wx:key="title">
+            <view class="item-row" hover-class="row-hover">
+              <view class="item-left" bind:tap="goNoteDetail" data-title="{{s.title}}" data-desc="{{s.desc}}" hover-class="cell-hover">
+                <text class="item-title">{{s.title}}</text>
+                <text class="item-desc" wx:if="{{s.desc}}">{{s.desc}}</text>
+                <text class="tap-hint">详情 ›</text>
               </view>
-              <view class="win-rate {{s.rateClass}}">{{s.rate * 100}}%</view>
+              <view class="score-badge {{s.scoreClass}}">{{s.score * 100}}分</view>
             </view>
           </block>
         </view>
@@ -68,8 +68,8 @@
   </view>
 
   <!-- 底部 -->
-  <view wx:if="{{stockData.length > 0}}" class="footer">
-    <text class="footer-text">下拉刷新 · 共 {{stockData.length}} 天记录</text>
-    <text wx:if="{{useMock}}" class="footer-hint">当前为模拟数据，部署云函数后自动切换</text>
+  <view wx:if="{{noteData.length > 0}}" class="footer">
+    <text class="footer-text">下拉刷新 · 共 {{noteData.length}} 天记录</text>
+    <text wx:if="{{useMock}}" class="footer-hint">当前为本地示例数据，部署云函数后自动切换</text>
   </view>
 </view>
