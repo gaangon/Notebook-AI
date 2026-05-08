@@ -30,8 +30,8 @@ Page({
   },
 
   mergeNotes() {
-    const cloud = this._cloudNotes || [];
-    const local = this._localNotes || [];
+    const cloud = (this._cloudNotes || []).filter(n => n && n.title);
+    const local = (this._localNotes || []).filter(n => n && n.title);
     const all = [...cloud, ...local];
 
     all.sort((a, b) => {
