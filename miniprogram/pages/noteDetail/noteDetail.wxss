@@ -4,25 +4,50 @@
 /* 标题卡 */
 .title-card {
   background: linear-gradient(135deg, #1aad19, #12c45e);
-  padding: 60rpx 36rpx 44rpx;
+  padding: 60rpx 36rpx 48rpx;
   color: #fff;
 }
-.note-title { display: block; font-size: 40rpx; font-weight: 700; }
-.date-row { display: flex; align-items: center; gap: 16rpx; margin-top: 12rpx; }
-.note-date { font-size: 26rpx; opacity: 0.85; }
-.local-badge {
-  font-size: 20rpx;
-  background: rgba(255,255,255,0.25);
-  padding: 4rpx 16rpx;
-  border-radius: 16rpx;
+.note-title {
+  display: block;
+  font-size: 44rpx;
+  font-weight: 700;
+  line-height: 1.4;
+  word-break: break-all;
+}
+.date-row {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+  margin-top: 16rpx;
+}
+.note-date {
+  font-size: 26rpx;
+  opacity: 0.85;
 }
 
-/* 内容卡 */
+/* 正文卡 */
 .content-card {
   background: #fff;
   margin: 24rpx;
   border-radius: 16rpx;
-  padding: 32rpx;
+  padding: 36rpx 32rpx;
   box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.04);
-  min-height: 300rpx;
+  min-height: 400rpx;
 }
+
+/* Markdown 渲染样式 */
+.md-content { font-size: 30rpx; color: #333; line-height: 1.9; }
+.md-p { margin-bottom: 16rpx; }
+.md-h1 { font-size: 40rpx; font-weight: 700; margin: 32rpx 0 16rpx; color: #111; }
+.md-h2 { font-size: 36rpx; font-weight: 700; margin: 28rpx 0 12rpx; color: #222; }
+.md-h3 { font-size: 32rpx; font-weight: 600; margin: 24rpx 0 10rpx; color: #333; }
+.md-pre {
+  background: #f6f8fa;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin: 20rpx 0;
+  overflow-x: auto;
+  font-size: 26rpx;
+}
+.md-code { font-family: Menlo, Consolas, monospace; color: #d63384; }
+.md-li { margin: 8rpx 0 8rpx 24rpx; display: list-item; list-style: disc; }

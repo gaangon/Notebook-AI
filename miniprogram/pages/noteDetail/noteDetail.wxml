@@ -1,12 +1,16 @@
 <!--pages/noteDetail/noteDetail.wxml-->
 <view class="container">
 
-  <view class="detail-header">
-    <text class="detail-title">{{title}}</text>
-    <text wx:if="{{createDate}}" class="detail-date">{{createDate}}</text>
+  <!-- 标题区域 -->
+  <view class="title-card">
+    <text class="note-title">{{title}}</text>
+    <view class="date-row" wx:if="{{createDate}}">
+      <text class="note-date">{{createDate}}</text>
+    </view>
   </view>
 
-  <view class="detail-body">
+  <!-- 正文区域 -->
+  <view class="content-card">
     <rich-text nodes="{{contentHtml}}"></rich-text>
   </view>
 
