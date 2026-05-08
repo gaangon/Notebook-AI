@@ -19,7 +19,6 @@ Page({
     this.mergeNotes();
   },
 
-  // 从本地存储加载用户自建笔记
   loadLocalNotes() {
     const local = wx.getStorageSync(STORAGE_KEY) || [];
     const tagged = local.map(item => ({
@@ -30,7 +29,6 @@ Page({
     this._localNotes = tagged;
   },
 
-  // 合并云端 + 本地，按创建日期倒序
   mergeNotes() {
     const cloud = this._cloudNotes || [];
     const local = this._localNotes || [];
@@ -45,13 +43,13 @@ Page({
     this.setData({ noteList: all });
   },
 
-  // 从云函数获取笔记数据
   fetchNoteData() {
     this.setData({ loading: true, useMock: false });
 
     return new Promise((resolve) => {
       if (typeof wx.cloud === 'undefined') {
-        this.useFallbackData(resolve);
+        this.useFallbackData();
+        resolve();
         return;
       }
 
@@ -71,20 +69,20 @@ Page({
             this.setData({ loading: false, useMock: false });
           } else {
             console.warn('⚠️ 云函数返回失败', result.error || '');
-            this.useFallbackData(resolve);
+            this.useFallbackData();
           }
           resolve();
         },
         fail: (err) => {
           console.warn('❌ 云函数不可用', err);
-          this.useFallbackData(resolve);
+          this.useFallbackData();
+          resolve();
         }
       });
     });
   },
 
-  // 兜底：使用本地 notes.json
-  useFallbackData(resolve) {
+  useFallbackData() {
     try {
       const notes = require('../../notes.json');
       const cloudNotes = (notes || []).map((item, idx) => ({
@@ -100,25 +98,20 @@ Page({
       this.mergeNotes();
       this.setData({ loading: false, useMock: true });
     }
-    if (resolve) resolve();
   },
 
-  // 跳转到新建笔记页面
   goCreate() {
     wx.navigateTo({ url: '/pages/createNote/createNote' });
   },
 
-  // 跳转到详情页
   goDetail(e) {
     const index = e.currentTarget.dataset.index;
     const note = this.data.noteList[index];
     if (!note) return;
-
     wx.setStorageSync('__current_note', note);
     wx.navigateTo({ url: '/pages/noteDetail/noteDetail' });
   },
 
-  // 下拉刷新
   onPullDownRefresh() {
     this.fetchNoteData().then(() => {
       wx.stopPullDownRefresh();

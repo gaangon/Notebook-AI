@@ -10,28 +10,21 @@ Page({
     canSubmit: false
   },
 
-  // 标题输入
   onTitleInput(e) {
-    this.setData({
-      title: e.detail.value
-    });
+    this.setData({ title: e.detail.value });
     this.checkCanSubmit();
   },
 
-  // 内容输入
   onContentInput(e) {
     const val = e.detail.value;
     if (val.length > MAX_CONTENT_LEN) {
       wx.showToast({ title: '最多1000字', icon: 'none' });
       return;
     }
-    this.setData({
-      content: val
-    });
+    this.setData({ content: val });
     this.checkCanSubmit();
   },
 
-  // 检查是否可提交
   checkCanSubmit() {
     const { title, content } = this.data;
     this.setData({
@@ -39,7 +32,6 @@ Page({
     });
   },
 
-  // 获取当前日期字符串
   getNowDateStr() {
     const now = new Date();
     const y = now.getFullYear();
@@ -48,8 +40,8 @@ Page({
     return y + '年' + m + '月' + d + '日';
   },
 
-  // 提交
-  onSubmit() {
+  // 保存按钮
+  onSave() {
     if (!this.data.canSubmit) return;
 
     const notes = wx.getStorageSync(STORAGE_KEY) || [];
@@ -70,13 +62,11 @@ Page({
     wx.setStorageSync(STORAGE_KEY, notes);
 
     wx.showToast({ title: '已保存', icon: 'success' });
-    setTimeout(() => {
-      wx.navigateBack();
-    }, 800);
+    setTimeout(() => { wx.navigateBack(); }, 800);
   },
 
-  // 返回
-  onBack() {
+  // 取消按钮
+  onCancel() {
     wx.navigateBack();
   }
 });
