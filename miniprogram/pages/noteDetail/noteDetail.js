@@ -1,103 +1,81 @@
 // pages/noteDetail/noteDetail.js
 Page({
   data: {
-    title: '',        // 笔记标题
-    desc: '',         // 笔记描述
-    history: [],      // 历史记录 [{idx, date, score, scoreClass}]
-    avgScore: 0,     // 平均评分
-    avgScoreClass: '',// 平均评分样式
-    totalCount: 0     // 记录次数
+    title: '',
+    创建日期: '',
+    具体内容: '',
+    _local: false,
+    richContent: []   // rich-text 需要的 nodes
   },
 
   onLoad: function (options) {
-    const { title, desc } = options;
-    if (!title) {
-      wx.showToast({ title: '参数错误', icon: 'none' });
-      return;
+    let note = null;
+    // 优先从参数解析完整数据
+    if (options.data) {
+      try {
+        note = JSON.parse(decodeURIComponent(options.data));
+      } catch (e) { /* ignore */ }
     }
-    this.setData({ title: decodeURIComponent(title || ''), desc: decodeURIComponent(desc || '') });
-    this.loadHistory(this.data.title);
-  },
-
-  loadHistory: function (title) {
-    wx.showLoading({ title: '加载中...' });
-
-    wx.cloud.callFunction({
-      name: 'getNotesData',
-      success: res => {
-        wx.hideLoading();
-        const result = res.result || {};
-        if (result.success && result.data) {
-          this.processHistory(result.data, title);
-        } else {
-          this.loadLocalHistory(title);
+    // 回退：从本地存储按标题查找
+    if (!note && options.title) {
+      const title = decodeURIComponent(options.title || '');
+      const list = wx.getStorageSync('localNotes') || [];
+      note = list.find(n => n['标题'] === title);
+      // 若仍找不到，尝试在云端数据里（页面级变量）搜索
+      if (!note) {
+        const app = getApp();
+        const cloud = app.globalData && app.globalData.cloudNotes;
+        if (cloud) {
+          note = cloud.find(n => n['标题'] === title);
         }
+      }
+    }
+
+    if (note) {
+      const richContent = this.mdToHtml(note['具体内容'] || '');
+      this.setData({
+        ...note,
+        richContent
+      });
+      wx.setNavigationBarTitle({ title: note['标题'] || '笔记详情' });
+    } else {
+      wx.showToast({ title: '笔记不存在', icon: 'none' });
+    }
+  },
+
+  // ======== 简易 Markdown → HTML（rich-text 可渲染）======
+  mdToHtml: function (md) {
+    if (!md) return [];
+    let html = md
+      // 标题
+      .replace(/^### (.+)$/gm, '<h3 style="font-size:30rpx;margin:20rpx 0 10rpx;">$1</h3>')
+      .replace(/^## (.+)$/gm, '<h2 style="font-size:34rpx;margin:24rpx 0 12rpx;">$1</h2>')
+      .replace(/^# (.+)$/gm, '<h1 style="font-size:38rpx;margin:28rpx 0 14rpx;">$1</h1>')
+      // 加粗
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      // 斜体
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      // 行内代码
+      .replace(/`(.+?)`/g, '<code style="background:#f0f0f0;padding:2rpx 8rpx;border-radius:6rpx;font-size:24rpx;">$1</code>')
+      // 代码块
+      .replace(/```[\s\S]*?```/g, m => '<pre style="background:#1e1e1e;color:#d4d4d4;padding:20rpx;border-radius:12rpx;overflow:auto;font-size:24rpx;">' + m.replace(/```/g, '').replace(/</g, '<').replace(/>/g, '>') + '</pre>')
+      // 无序列表
+      .replace(/^- (.+)$/gm, '<li style="margin:6rpx 0 6rpx 20rpx;">$1</li>')
+      // 有序列表
+      .replace(/^\d+\. (.+)$/gm, '<li style="margin:6rpx 0 6rpx 20rpx;">$1</li>')
+      // 引用块
+      .replace(/^> (.+)$/gm, '<blockquote style="border-left:6rpx solid #1aad19;padding:8rpx 20rpx;margin:12rpx 0;color:#555;">$1</blockquote>')
+      // 链接
+      .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" style="color:#1aad19;">$1</a>')
+      // 段落（连续两个换行）
+      .replace(/\n\n/g, '<br/><br/>');
+
+    return [{
+      name: 'div',
+      attrs: {
+        style: 'font-size:28rpx;line-height:1.8;color:#333;padding:20rpx 0;'
       },
-      fail: () => {
-        wx.hideLoading();
-        this.loadLocalHistory(title);
-      }
-    });
-  },
-
-  // 从所有日期中找出该笔记的所有记录
-  processHistory: function (allData, title) {
-    const rawHistory = [];
-    allData.forEach(day => {
-      const items = day['条目'] || [];
-      const found = items.find(s => s['标题'] === title);
-      if (found) {
-        rawHistory.push({
-          date: day['日期'],
-          score: found['评分']
-        });
-      }
-    });
-
-    rawHistory.sort((a, b) => {
-      const da = this._parseDate(a.date);
-      const db = this._parseDate(b.date);
-      return db - da;
-    });
-
-    const history = rawHistory.map((item, i) => ({
-      idx: i,
-      date: item.date,
-      score: (item.score * 100).toFixed(1),
-      scoreClass: this._getScoreClass(item.score)
-    }));
-
-    const avg = history.length > 0
-      ? rawHistory.reduce((sum, h) => sum + h.score, 0) / rawHistory.length
-      : 0;
-
-    this.setData({
-      history,
-      avgScore: (avg * 100).toFixed(1),
-      avgScoreClass: this._getScoreClass(avg),
-      totalCount: history.length
-    });
-
-    wx.setNavigationBarTitle({ title: this.data.title });
-  },
-
-  loadLocalHistory: function (title) {
-    const MOCK_ALL = [
-      { "日期": "2026年5月7日", "条目": [{ "标题": "项目启动会议纪要", "评分": 0.85 }, { "标题": "读书笔记：原子习惯", "评分": 0.72 }] },
-      { "日期": "2026年5月6日", "条目": [{ "标题": "项目启动会议纪要", "评分": 0.78 }, { "标题": "晨间日记", "评分": 0.55 }] },
-      { "日期": "2026年5月5日", "条目": [{ "标题": "项目启动会议纪要", "评分": 0.90 }, { "标题": "产品需求梳理", "评分": 0.68 }] }
-    ];
-    this.processHistory(MOCK_ALL, title);
-  },
-
-  _parseDate: function (str) {
-    const cleaned = String(str).replace('年', '-').replace('月', '-').replace('日', '');
-    return new Date(cleaned).getTime() || 0;
-  },
-
-  _getScoreClass: function (score) {
-    if (score >= 0.8) return 'high';
-    if (score >= 0.6) return 'medium';
-    return 'low';
+      children: [{ type: 'text', text: html }]
+    }];
   }
 });

@@ -1,0 +1,32 @@
+<view class="container">
+  <view class="form">
+    <view class="field">
+      <text class="label">标题</text>
+      <input
+        class="input"
+        placeholder="请输入笔记标题"
+        maxlength="50"
+        value="{{title}}"
+        bindinput="onTitleInput"
+      />
+    </view>
+
+    <view class="field">
+      <text class="label">内容（Markdown）</text>
+      <textarea
+        class="textarea"
+        placeholder="请输入笔记内容，支持 Markdown 格式"
+        maxlength="1000"
+        value="{{content}}"
+        bindinput="onContentInput"
+        auto-height
+      />
+      <text class="counter">{{content.length}}/1000</text>
+    </view>
+  </view>
+
+  <view class="btn-row">
+    <view class="cancel-btn" bind:tap="onCancel">取消</view>
+    <view class="save-btn" bind:tap="onSave">保存</view>
+  </view>
+</view>

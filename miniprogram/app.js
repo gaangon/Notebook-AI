@@ -1,18 +1,16 @@
-// app.js
-
+// app.js - 纯本地模式，不依赖云环境
 App({
   onLaunch: function () {
-    if (!wx.cloud) {
-      console.error("请使用 2.2.3 或以上的基础库以使用云能力");
-    } else {
-      wx.cloud.init({
-        // env 参数说明：
-        //   env 参数决定接下来小程序发起的云开发调用（wx.cloud.xxx）会默认请求到哪个云环境的资源
-        //   此处请填入环境 ID, 环境 ID 可打开云控制台查看
-        //   如不填则使用默认环境（第一个创建的环境）
-        env: "wx-d8gxg26kyb6352e1a",
-        traceUser: true,
-      });
+    // 云环境初始化（静默失败，不影响本地运行）
+    if (typeof wx.cloud !== 'undefined' && wx.cloud) {
+      try {
+        wx.cloud.init({
+          env: 'cloud1-d8gtbzcucb546ae4d',
+          traceUser: false
+        });
+      } catch (e) {
+        // 云环境不可用，页面将使用本地数据
+      }
     }
-  },
+  }
 });

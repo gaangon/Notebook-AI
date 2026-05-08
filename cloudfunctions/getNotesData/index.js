@@ -5,7 +5,7 @@ cloud.init({ env: cloud.DYNAMIC_CURRENT_ENV });
 exports.main = async (event, context) => {
   try {
     const result = await cloud.downloadFile({
-      fileID: 'cloud://wx-d8gxg26kyb6352e1a.7778-wx-d8gxg26kyb6352e1a-1257841065/notes.json'
+      fileID: 'cloud://cloud1-d8gtbzcucb546ae4d.636c-cloud1-d8gtbzcucb546ae4d-1429254465/notes.json'
     });
 
     if (!result.fileContent) {
@@ -19,6 +19,7 @@ exports.main = async (event, context) => {
       return { success: false, error: 'notes.json 格式错误，应为数组' };
     }
 
+    // 返回原始数据，前端自行处理
     return { success: true, data };
   } catch (err) {
     return { success: false, error: err.message };

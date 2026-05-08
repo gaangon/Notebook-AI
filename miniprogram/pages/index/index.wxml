@@ -1,12 +1,19 @@
 <!--pages/index/index.wxml-->
 <view class="container">
+
   <!-- 头部 -->
   <view class="header">
-    <view class="title-row">
-      <text class="title">我的笔记本</text>
-      <text wx:if="{{useMock}}" class="mock-badge">本地数据</text>
+    <text class="title">我的笔记本</text>
+    <view class="header-right">
+      <view class="refresh-btn" bind:tap="fetchNoteData" hover-class="btn-hover">
+        <text class="refresh-icon">↻</text>
+        <text>刷新</text>
+      </view>
+      <view class="add-btn" bind:tap="goCreate" hover-class="btn-hover">
+        <text class="add-icon">+</text>
+        <text>新建</text>
+      </view>
     </view>
-    <text class="subtitle">每日笔记 · 评分回顾</text>
   </view>
 
   <!-- 加载中 -->
@@ -15,61 +22,29 @@
     <text class="loading-text">加载中...</text>
   </view>
 
-  <!-- 错误提示 -->
-  <view wx:elif="{{error}}" class="error-box">
-    <text class="error-icon">!</text>
-    <text class="error-text">{{error}}</text>
-    <view class="retry-btn" bind:tap="fetchNoteData">重试</view>
-  </view>
-
   <!-- 空数据 -->
-  <view wx:elif="{{noteData.length === 0}}" class="empty-box">
-    <text class="empty-icon">o</text>
-    <text class="empty-text">暂无笔记数据</text>
-    <text class="empty-hint">请先将 notes.json 上传到云存储</text>
+  <view wx:elif="{{noteList.length === 0}}" class="empty-box">
+    <text class="empty-icon">📝</text>
+    <text class="empty-text">暂无笔记</text>
+    <text class="empty-hint">点击右上角「新建」添加本地笔记，或点击「刷新」从服务器拉取</text>
   </view>
 
-  <!-- 数据列表 -->
+  <!-- 笔记列表 -->
   <view wx:else class="list">
-    <block wx:for="{{noteData}}" wx:key="idx">
-      <view class="date-card">
-        <!-- 日期头部 -->
-        <view
-          class="date-header"
-          bind:tap="toggleExpand"
-          data-idx="{{item.idx}}"
-          hover-class="header-hover"
-        >
-          <view class="date-left">
-            <text class="date-text">{{item.date}}</text>
-            <text class="item-count">{{item.count}} 条笔记</text>
-          </view>
-          <view class="header-right">
-            <text class="avg-score {{item.avgScoreClass}}">{{item.avgScore}}分</text>
-            <text class="arrow {{expandedIdx === item.idx ? 'expanded' : ''}}">></text>
-          </view>
-        </view>
-
-        <!-- 条目列表 -->
-        <view wx:if="{{expandedIdx === item.idx}}" class="item-list">
-          <block wx:for="{{item.items}}" wx:for-item="s" wx:key="title">
-            <view class="item-row" hover-class="row-hover">
-              <view class="item-left" bind:tap="goNoteDetail" data-title="{{s.title}}" data-desc="{{s.desc}}" hover-class="cell-hover">
-                <text class="item-title">{{s.title}}</text>
-                <text class="item-desc" wx:if="{{s.desc}}">{{s.desc}}</text>
-                <text class="tap-hint">详情 ›</text>
-              </view>
-              <view class="score-badge {{s.scoreClass}}">{{s.score * 100}}分</view>
-            </view>
-          </block>
-        </view>
+    <view
+      wx:for="{{noteList}}"
+      wx:key="id"
+      class="note-card"
+      bind:tap="goDetail"
+      data-index="{{index}}"
+      hover-class="card-hover"
+    >
+      <view class="note-title-row">
+        <text class="note-badge" wx:if="{{item._local}}">本地</text>
+        <text class="note-title">{{item.标题}}</text>
       </view>
-    </block>
+      <text class="note-date">{{item.创建日期}}</text>
+    </view>
   </view>
 
-  <!-- 底部 -->
-  <view wx:if="{{noteData.length > 0}}" class="footer">
-    <text class="footer-text">下拉刷新 · 共 {{noteData.length}} 天记录</text>
-    <text wx:if="{{useMock}}" class="footer-hint">当前为本地示例数据，部署云函数后自动切换</text>
-  </view>
 </view>
